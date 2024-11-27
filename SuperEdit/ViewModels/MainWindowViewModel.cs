@@ -1,38 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Input;
 using AvaloniaEdit;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
+
 namespace SuperEdit.ViewModels;
+
 using System.Collections.ObjectModel;
 using AvaloniaEdit.Editing;
 using ReactiveUI;
 using SuperEdit.Views;
 using TextMateSharp.Grammars;
- using Avalonia;
-public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
+using Avalonia;
+using SuperEdit.Views;
+
+public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
 {
-    private string ? _tabItemHeader="新建文本.txt";
+    private string? _tabItemHeader = "新建文本.txt";
 
 
     public void IncreaseFontSizeMouseCommmand(TextEditor editor)
     {
-
         editor.FontSize += 2;
     }
+
     public void DecreaseFontSizeMouseCommmand(TextEditor editor)
     {
         editor.FontSize -= 2;
     }
 
-    public void ToggleAutoLineMouseCommmand(    TextEditor editor)
+    public void ToggleAutoLineMouseCommmand(TextEditor editor)
     {
-
-
         editor.WordWrap = !editor.WordWrap;
     }
 
@@ -66,7 +71,6 @@ public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
     public void RedoMouseCommmand(TextArea textArea)
     {
         ApplicationCommands.Redo.Execute(null, textArea);
-
     }
 
     public void FindMouseCommmand(TextArea textArea)
@@ -77,7 +81,6 @@ public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
     public void ReplaceMouseCommmand(TextArea textArea)
     {
         ApplicationCommands.Replace.Execute(null, textArea);
-
     }
 
     public void ReloadFileMouseCommmand(Button reloadButton)
@@ -85,41 +88,64 @@ public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
         // Reload the file from disk
         try
         {
+            var filePath = reloadButton.Content?.ToString();
+            if (filePath != null && !filePath.Contains("新建文本.txt"))
+            {
+                var fileContent = File.ReadAllText(filePath);
+                Console.WriteLine("文件重新加载成功");
+                Console.WriteLine("文件路径：" + filePath);
+            }
+            else
+            {
+                Console.WriteLine("文件不存在哈哈");
+                Console.WriteLine("文件路径：" + filePath);
+            }
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-
     }
 
-    public   void CopyFilePathMouseCommmand(Button  renameButton )
+    public void CopyFilePathMouseCommmand(Button renameButton)
     {
         try
         {
             var window = new Window();
             var content = renameButton.Content;
-            Console.WriteLine(content? .ToString());
-            window.Clipboard?.SetTextAsync( content? .ToString());
+            Console.WriteLine(content?.ToString());
+            window.Clipboard?.SetTextAsync(content?.ToString());
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
             throw;
         }
-
     }
 
-    public void OpenFileFolderMouseCommmand(Button   openFolderButton)
+    public void OpenFileFolderMouseCommmand(Button openFolderButton)
     {
         try
         {
             var filePath = openFolderButton.Content?.ToString();
             Console.WriteLine(filePath);
-            var fileDirectory = System.IO.Path.GetDirectoryName(filePath);
-            Console.WriteLine(fileDirectory);
-            if (fileDirectory != null) System.Diagnostics.Process.Start(fileDirectory);
+            if (filePath != null && !filePath.Contains("新建文本.txt"))
+            {
+                var fileDirectory = System.IO.Path.GetDirectoryName(filePath);
+                Console.WriteLine(fileDirectory);
+                if (fileDirectory != null)
+                {
+                    //打开文件夹
+                    System.Diagnostics.Process.Start("explorer.exe", fileDirectory);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("文件不存在哈哈");
+                Console.WriteLine("文件路径：" + filePath);
+            }
         }
         catch (Exception e)
         {
@@ -128,18 +154,17 @@ public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
         }
     }
 
-    public void CreateNewTabCommand( TabControl tabControl  )
+    public void CreateNewTabCommand(TabControl tabControl)
     {
         try
         {
-
             var tabItem = tabControl.Items.First();
 
 // will search for a ComboBox that's named "userList"
             if (tabItem != null)
             {
                 Console.WriteLine("Creating a new tab");
-                tabControl.Items.Add(tabItem  as TabItem);
+                tabControl.Items.Add(tabItem as TabItem);
             }
             else
             {
@@ -154,20 +179,33 @@ public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
     }
 
     [Obsolete("Obsolete")]
-    public  async void SaveCurrentFile(TextEditor editor)
+    public async void SaveCurrentFile(TextEditor editor)
     {
-
+        // 保存当前文件
+        var filePath = editor.Document.FileName;
+        Console.WriteLine(filePath);
+        if (filePath != null && !filePath.Contains("新建文本.txt"))
+        {
+            Console.WriteLine(editor.Text);
+            await File.WriteAllTextAsync(filePath, editor.Text); // 保存文件内容 到指定路径
+            Console.WriteLine(filePath + " saved");
+        }
+        else
+        {
+            Console.WriteLine("文件不存在哈哈");
+            Console.WriteLine("文件路径：" + filePath);
+        }
     }
 
+    // 打开指定文件
     [Obsolete("Obsolete")]
-    public async   void OpenSpecificFileContextMenuCommand(TextEditor editor)
+    public async void OpenSpecificFileContextMenuCommand(TextEditor editor)
     {
-
         // 使用Avalonia的方法打开对话框
-        var dialog = new    OpenFileDialog();
+        var dialog = new OpenFileDialog();
         var window = new MainWindow();
-        var path = await dialog.ShowAsync( window);
-        var filePath =    path?.FirstOrDefault() ?? null;
+        var path = await dialog.ShowAsync(window);
+        var filePath = path?.FirstOrDefault() ?? null;
         Console.WriteLine(filePath);
         if (!string.IsNullOrEmpty(filePath))
         {
@@ -175,19 +213,107 @@ public partial class MainWindowViewModel :  ViewModelBase,INotifyPropertyChanged
             editor.Text = await File.ReadAllTextAsync(filePath);
             //  更新文件路径
             editor.Document.FileName = filePath;
-            Console.WriteLine(editor.Document.FileName);
+            Console.WriteLine(editor.Document.FileName + " loaded");
             //  更新标题栏
-            _tabItemHeader = filePath.Split('\\').Last();
-            _statusBarText = filePath; // 更新状态栏
-
+            TabItemHeader = filePath.Split('\\').Last();
+            // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
+            StatusBarFilePath = filePath; // 更新状态栏
         }
     }
-   private string ? _statusBarText = "新建文本.txt";
-    public object? TabItemHeader
+
+    private string? _statusBarText = "新建文本.txt";
+    private IWindowImpl _windowImplImplementation;
+
+    // private App _window;
+//    public MainWindowViewModel(App app)
+//    {
+//        _window = app;
+//    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
     {
-        get => _tabItemHeader;
-        set => _tabItemHeader = (string?)value;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public object? StatusBarFilePath { get=> _statusBarText; set => _statusBarText = (string?)value; }
+    public string? TabItemHeader
+    {
+        get => _tabItemHeader;
+        set
+        {
+            if (_tabItemHeader != value)
+            {
+                _tabItemHeader = value;
+                OnPropertyChanged(nameof(TabItemHeader)); // 通知更新
+            }
+        }
+    }
+
+    public string? StatusBarFilePath
+    {
+        get => _statusBarText;
+        set
+        {
+            if (_statusBarText != value)
+            {
+                _statusBarText = value;
+                OnPropertyChanged(nameof(StatusBarFilePath)); // 通知更新
+            }
+        }
+    }
+
+    // 另存为
+    [Obsolete("Obsolete")]
+    public async void SaveCurrentTemplateFileToDisk (TextEditor editor )
+    {
+        var filePath = StatusBarFilePath;
+        Console.WriteLine(filePath);
+        if (filePath != null && filePath.Contains("新建文本.txt"))
+        {
+            var dialog = new SaveFileDialog()
+            {
+                Title = "另存为", DefaultExtension = "txt", InitialFileName = "输入保存的文件名",
+                Filters = new List<FileDialogFilter>
+                {
+                    new FileDialogFilter() { Name = "文本文件", Extensions = { "txt" } },
+                    new FileDialogFilter() { Name = "所有文件", Extensions = { "*" } }
+                }
+            };
+            var window = new MainWindow();
+            var path = await dialog.ShowAsync(window);
+            if (!string.IsNullOrEmpty(path))
+            {
+                // 根据用户选择的路径保存文件内容
+                await SaveFileContentAsync(path , editor.Text ?? string.Empty );
+                Console.WriteLine($"文件已保存至: {path}");
+            }
+        }
+
+
+    }
+
+    private async Task SaveFileContentAsync(string filePath, string content)
+    {
+        // 异步保存文件
+        using (var streamWriter = new StreamWriter(filePath))
+        {
+            await streamWriter.WriteAsync(content);
+        }
+    }
+
+
+
+    public void testOpenFile()
+    {
+        var statusbar = StatusBarFilePath?.ToString() ?? "不存在statusBarfile";
+        ;
+
+        Console.WriteLine("状态栏：" + statusbar);
+        var tabBar = TabItemHeader?.ToString() ?? "不存在tabBarfile";
+        Console.WriteLine("标签栏bucuo：" + tabBar);
+    }
+
+    public void CloseTabOrWindowCommand()
+    {
+    }
 }

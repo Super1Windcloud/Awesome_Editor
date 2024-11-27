@@ -43,7 +43,8 @@
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
 
-        <TabControl Name="EditorTabControl"  Margin="0"  Padding="0" FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
+        <TabControl Name="EditorTabControl"  Margin="0"  Padding="0"
+                    FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
                     Background="Transparent">
             <TabControl.ContextFlyout >
                 <MenuFlyout>
@@ -57,7 +58,8 @@
                     ></MenuItem>
                     </MenuFlyout>
             </TabControl.ContextFlyout>
-            <TabItem  Name="EditorTab" Margin="10,0,0,0" Header="{ Binding  TabItemHeader}"  MaxHeight="25" FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
+            <TabItem  Name="EditorTab" Margin="10,0,0,0"
+                      Header="{ Binding  TabItemHeader, Mode=TwoWay}"  MaxHeight="25" FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
                      FontSize="12" Padding="0"  Height="25"
                      HorizontalContentAlignment ="Center"
                      VerticalContentAlignment="Center"
@@ -74,17 +76,17 @@
                                                                        FontSize="20" PointerWheelChanged="TextEditor_PointerWheelChanged">
                 <AvaloniaEdit:TextEditor.ContextFlyout >
                     <MenuFlyout>
-                        <MenuItem Header="新建标签页" InputGesture="ctrl+N" Command="{Binding  }"
-                        CommandParameter="{Binding #EditorTabControl}"></MenuItem>
-                        <MenuItem Header="关闭标签页" InputGesture="ctrl+W" Command="{Binding
-                        }"
-                                  CommandParameter="{Binding #Editor}"></MenuItem>
+                        <!-- <MenuItem Header="新建标签页" InputGesture="ctrl+N" Command="{Binding  }" -->
+                        <!-- CommandParameter="{Binding #EditorTabControl}"></MenuItem> -->
+                        <!-- <MenuItem Header="关闭标签页" InputGesture="ctrl+W" Command="{Binding CloseTabOrWindowCommand}" -->
+                        <!--           CommandParameter="{Binding #Editor}"></MenuItem> -->
                         <MenuItem Header="打开文件..." InputGesture="ctrl+O" Command="{Binding
                         OpenSpecificFileContextMenuCommand}" CommandParameter="{Binding #Editor}"></MenuItem>
                         <MenuItem Header="保存文件" InputGesture="ctrl+S" Command="{Binding  SaveCurrentFile
                         }"
                                   CommandParameter="{Binding #Editor}"></MenuItem>
                         <MenuItem Header="另存为..." InputGesture="ctrl+shift+S" Command="{Binding
+                        SaveCurrentTemplateFileToDisk
                         }"
                                   CommandParameter="{Binding #Editor}"></MenuItem>
                         <MenuItem Header="-" />
@@ -130,14 +132,14 @@
                                   CommandParameter="{Binding #Editor}">
                         </MenuItem>
                         <MenuItem Header="复制文件路径"
-                                  Command="{Binding
+                                  Command="{Binding  CopyFilePathMouseCommmand
                            }"
-                                  CommandParameter="{Binding #Editor}">
+                                  CommandParameter="{Binding #FilePath}">
                         </MenuItem>
                         <MenuItem Header="打开文件所在目录"
-                                  Command="{Binding
+                                  Command="{Binding OpenFileFolderMouseCommmand
                            }"
-                                  CommandParameter="{Binding #Editor}">
+                                  CommandParameter="{Binding #FilePath}">
                         </MenuItem>
                     </MenuFlyout>
                 </AvaloniaEdit:TextEditor.ContextFlyout>
@@ -219,7 +221,7 @@
                     Padding ="4,4,8,4"
                     Background="Transparent"
                     IsTabStop="False"
-                    Content="{Binding StatusBarFilePath}"
+                    Content="{Binding StatusBarFilePath ,Mode=TwoWay }"
                     VerticalAlignment="Center"
                     Opacity="1.0"
                     FontSize="11"
@@ -229,7 +231,7 @@
                     <MenuFlyout>
 
                         <MenuItem Header="从磁盘重新加载" Command="{Binding ReloadFileMouseCommmand}"
-                                  CommandParameter="{Binding #FilePath}" InputGesture="ctrl+R"></MenuItem>
+                                  CommandParameter="{Binding #FilePath}"  ></MenuItem>
                         <MenuItem Header="复制文件路径" Command="{Binding CopyFilePathMouseCommmand}"
                                   CommandParameter="{Binding #FilePath}"></MenuItem>
                         <MenuItem Header="打开文件所在文件夹" Command="{Binding OpenFileFolderMouseCommmand}"
