@@ -1,5 +1,7 @@
-﻿# 定义编辑器的路径
-$editorPath = "A:\WinUI3_AvaloniaUI_Project\Rider_Project\SuperEdit\SuperEdit\bin\Release\net8.0\win-x64\publish\SuperEdit.exe"
+﻿# 添加 SuperEdit 到文件资源管理器的上下文菜单 , 通过管理员权限运行
+
+# 定义编辑器的路径
+$editorPath = "A:\Scoop\apps\superedit\current\SuperEdit.exe"
 
 
 
@@ -10,12 +12,12 @@ if (-Not (Test-Path $editorPath)) {
 }
 
 # 注册表路径
-$regPath = "HKCR\*\shell\Open with MyEditor"
+$regPath = "计算机\HKEY_CLASSES_ROOT\*\shell\SuperEdit"
 $commandPath = "$regPath\command"
 
 # 创建上下文菜单键
 New-Item -Path $regPath -Force | Out-Null
-Set-ItemProperty -Path $regPath -Name "(Default)" -Value "Open with MyEditor"
+Set-ItemProperty -Path $regPath -Name "(Default)" -Value "用 SuperEdit 打开"
 
 # 添加图标（可选）
 Set-ItemProperty -Path $regPath -Name "Icon" -Value $editorPath
