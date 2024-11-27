@@ -7,6 +7,14 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <PackageId>SuperEdit</PackageId>
+        <Title>SuperEdit</Title>
+        <Authors>SuperWindCloud</Authors>
+        <Company>SuperWindCloud</Company>
+        <WindowsPackageType>None</WindowsPackageType>
+        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+        <ApplicationVersion>7.7.7</ApplicationVersion>
+        <ApplicationIcon>Assets\AppIcon\Icon.png</ApplicationIcon>
     </PropertyGroup>
 
 
