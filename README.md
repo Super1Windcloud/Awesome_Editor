@@ -6,7 +6,7 @@
  
 ## 快速开始 
 
-- [下载release体验](https://gitee.com/SuperWindcloud/avalonia_-editor/releases/download/1.1.1/SuperEdit.exe)
+- [下载release体验](https://github.com/Super1Windcloud/Awesome_Editor/releases/download/7.7.7/SuperEdit.exe)
 -  通过scoop 安装
 ```powershell
 scoop  bucket add hy https://gitee.com/SuperWindcloud/hyperscoop_bucket 
