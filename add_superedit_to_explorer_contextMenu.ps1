@@ -1,5 +1,7 @@
 ﻿# 定义编辑器的路径
-$editorPath = "C:\Program Files\MyEditor\MyEditor.exe"
+$editorPath = "A:\WinUI3_AvaloniaUI_Project\Rider_Project\SuperEdit\SuperEdit\bin\Release\net8.0\win-x64\publish\SuperEdit.exe"
+
+
 
 # 检查编辑器路径是否存在
 if (-Not (Test-Path $editorPath)) {
