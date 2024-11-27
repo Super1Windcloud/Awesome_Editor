@@ -1,0 +1,2 @@
+A:\WinUI3_AvaloniaUI_Project\Rider_Project\SuperEdit\SuperEdit\bin\Release\net8.0\win-x64\publish\SuperEdit.pdb
+A:\WinUI3_AvaloniaUI_Project\Rider_Project\SuperEdit\SuperEdit\bin\Release\net8.0\win-x64\publish\SuperEdit.exe
