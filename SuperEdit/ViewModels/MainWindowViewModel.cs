@@ -4,11 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Input;
 using AvaloniaEdit;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 
 namespace SuperEdit.ViewModels;

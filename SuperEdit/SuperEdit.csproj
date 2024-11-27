@@ -14,7 +14,7 @@
         <WindowsPackageType>None</WindowsPackageType>
         <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
         <ApplicationVersion>7.7.7</ApplicationVersion>
-        <ApplicationIcon>Assets\AppIcon\Icon.png</ApplicationIcon>
+        <ApplicationIcon>Assets\Icon.ico</ApplicationIcon>
     </PropertyGroup>
 
 
