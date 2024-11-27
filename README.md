@@ -4,7 +4,7 @@
 #基于Avalonia的文本编辑器
 
  
-## (下载release体验)[https://gitee.com/SuperWindcloud/avalonia_-editor/releases/download/1.1.1/SuperEdit.exe]
+## [下载release体验](https://gitee.com/SuperWindcloud/avalonia_-editor/releases/download/1.1.1/SuperEdit.exe)
 
 
 ## 功能
