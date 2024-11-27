@@ -1,0 +1,254 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SuperEdit.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        xmlns:viewModels="clr-namespace:SuperEdit.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="900"
+        x:Class="SuperEdit.Views.MainWindow"
+        
+        TransparencyLevelHint="AcrylicBlur,Mica"
+        CornerRadius="10"
+        TransparencyBackgroundFallback="Black"
+        OpacityMask="Black"
+        WindowStartupLocation="CenterScreen"
+
+        ExtendClientAreaTitleBarHeightHint="-1"
+        ExtendClientAreaToDecorationsHint="True"
+        UseLayoutRounding="True"
+        Background="Transparent"
+        Icon="/Assets/AppIcon/Icon.png"
+        Width="1200"
+        Height="900"
+        Title="SuperEdit"
+        x:DataType="viewModels:MainWindowViewModel">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+    <Window.Resources>
+
+    </Window.Resources>
+    <Panel  Name="RootPanel"  Background="{DynamicResource ThemeBackgroundBrush}">
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    PlatformTransparencyCompensationLevel="1"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <TabControl Name="EditorTabControl"  Margin="0"  Padding="0"
+                    FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
+                    Background="Transparent">
+            <TabControl.ContextFlyout >
+                <MenuFlyout>
+                    <MenuItem Header="新建标签页" InputGesture="ctrl+N" Command="{Binding  }" />
+                    <MenuItem Header="关闭标签页" InputGesture="ctrl+W" Command="{Binding  }" />
+                    <MenuItem Header="保存标签页" InputGesture="ctrl+S" Command="{ Binding   }" />
+                    <MenuItem Header="-" />
+                    <MenuItem Header="复制文件路径"   Command="{Binding  }"
+                              ></MenuItem>
+                    <MenuItem Header="打开文件所在目录"   Command="{Binding  }"
+                    ></MenuItem>
+                    </MenuFlyout>
+            </TabControl.ContextFlyout>
+            <TabItem  Name="EditorTab" Margin="10,0,0,0"
+                      Header="{ Binding  TabItemHeader, Mode=TwoWay}"  MaxHeight="25" FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
+                     FontSize="12" Padding="0"  Height="25"
+                     HorizontalContentAlignment ="Center"
+                     VerticalContentAlignment="Center"
+                     Background="Transparent" BackgroundSizing="CenterBorder">
+                 <AvaloniaEdit:TextEditor Text="Hello SuperEdit!"
+                                                                       x:Name="Editor"
+                                                                       ShowLineNumbers="True" SyntaxHighlighting="JavaScript"
+                                                                       FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace"
+                                                                       FontStyle="Normal" FontWeight="Normal"
+                                                                       Margin="10" KeyDown="BindingKeyEvent"
+                                                                       HorizontalScrollBarVisibility="Visible"
+                                                                       VerticalScrollBarVisibility="Visible"
+                                                                       Background="{DynamicResource  ThemeBackgroundBrush}"
+                                                                       FontSize="20" PointerWheelChanged="TextEditor_PointerWheelChanged">
+                <AvaloniaEdit:TextEditor.ContextFlyout >
+                    <MenuFlyout>
+                        <!-- <MenuItem Header="新建标签页" InputGesture="ctrl+N" Command="{Binding  }" -->
+                        <!-- CommandParameter="{Binding #EditorTabControl}"></MenuItem> -->
+                        <!-- <MenuItem Header="关闭标签页" InputGesture="ctrl+W" Command="{Binding CloseTabOrWindowCommand}" -->
+                        <!--           CommandParameter="{Binding #Editor}"></MenuItem> -->
+                        <MenuItem Header="打开文件..." InputGesture="ctrl+O" Command="{Binding
+                        OpenSpecificFileContextMenuCommand}" CommandParameter="{Binding #Editor}"></MenuItem>
+                        <MenuItem Header="保存文件" InputGesture="ctrl+S" Command="{Binding  SaveCurrentFile
+                        }"
+                                  CommandParameter="{Binding #Editor}"></MenuItem>
+                        <MenuItem Header="另存为..." InputGesture="ctrl+shift+S" Command="{Binding
+                        SaveCurrentTemplateFileToDisk
+                        }"
+                                  CommandParameter="{Binding #Editor}"></MenuItem>
+                        <MenuItem Header="-" />
+                        <MenuItem Header="复制" InputGesture="ctrl+C" Command="{Binding CopyMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="剪切" InputGesture="ctrl+X" Command="{Binding CutMouseCommand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="粘贴" InputGesture="ctrl+V" Command="{Binding PasteMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="撤销" InputGesture="ctrl+Z" Command="{Binding UndoMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="取消撤销" InputGesture="ctrl+shift+Z" Command="{Binding RedoMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="-" />
+                        <MenuItem Header="全选" InputGesture="ctrl+A" Command="{Binding SelectAllMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="查找" InputGesture="ctrl+F" Command="{Binding FindMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="替换" InputGesture="ctrl+H" Command="{Binding ReplaceMouseCommmand}"
+                                  CommandParameter="{Binding #Editor.TextArea}">
+                        </MenuItem>
+                        <MenuItem Header="-" />
+                        <MenuItem Header="开启自动换行" InputGesture="alt+Z"
+                                  Command="{Binding
+                    ToggleAutoLineMouseCommmand}"
+                                  CommandParameter="{Binding #Editor}">
+                        </MenuItem>
+                        <MenuItem Header="增大字体" InputGesture="alt+D"
+                                  Command="{Binding
+                        IncreaseFontSizeMouseCommmand }"
+                                  CommandParameter="{Binding #Editor }">
+                        </MenuItem>
+                        <MenuItem Header="减小字体" InputGesture="alt+S"
+                                  Command="{Binding
+                        DecreaseFontSizeMouseCommmand  }"
+                                  CommandParameter="{Binding #Editor}">
+                        </MenuItem>
+                        <MenuItem Header="复制文件路径"
+                                  Command="{Binding  CopyFilePathMouseCommmand
+                           }"
+                                  CommandParameter="{Binding #FilePath}">
+                        </MenuItem>
+                        <MenuItem Header="打开文件所在目录"
+                                  Command="{Binding OpenFileFolderMouseCommmand
+                           }"
+                                  CommandParameter="{Binding #FilePath}">
+                        </MenuItem>
+                    </MenuFlyout>
+                </AvaloniaEdit:TextEditor.ContextFlyout>
+
+            </AvaloniaEdit:TextEditor>
+
+            </TabItem>
+        </TabControl>
+
+
+      <!-- -->
+      <!-- <AvaloniaEdit:TextEditor Text="Hello SuperEdit!" -->
+      <!--                                x:Name="Editor" -->
+      <!--                                ShowLineNumbers="True" SyntaxHighlighting="C#" -->
+      <!--                                FontFamily="Cascadia Code, Consolas, Lucida Console, Courier New, monospace" -->
+      <!--                                FontStyle="Normal" FontWeight="Normal" -->
+      <!--                                Margin="10" KeyDown="BindingKeyEvent" -->
+      <!--                                HorizontalScrollBarVisibility="Visible" -->
+      <!--                                VerticalScrollBarVisibility="Visible" -->
+      <!--                                Background="{DynamicResource ThemeBackgroundBrush}" -->
+      <!--                                FontSize="20" PointerWheelChanged="TextEditor_PointerWheelChanged"> -->
+      <!--           <AvaloniaEdit:TextEditor.ContextFlyout > -->
+      <!--               <MenuFlyout> -->
+      <!--                   <MenuItem Header="复制" InputGesture="ctrl+C" Command="{Binding CopyMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="剪切" InputGesture="ctrl+X" Command="{Binding CutMouseCommand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="粘贴" InputGesture="ctrl+V" Command="{Binding PasteMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="撤销" InputGesture="ctrl+Z" Command="{Binding UndoMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="取消撤销" InputGesture="ctrl+shift+Z" Command="{Binding RedoMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="-" /> -->
+      <!--                   <MenuItem Header="全选" InputGesture="ctrl+A" Command="{Binding SelectAllMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="查找" InputGesture="ctrl+F" Command="{Binding FindMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="替换" InputGesture="ctrl+H" Command="{Binding ReplaceMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor.TextArea}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="-" /> -->
+      <!--                   <MenuItem Header="开启自动换行" InputGesture="alt+Z" -->
+      <!--                             Command="{Binding -->
+      <!--               ToggleAutoLineMouseCommmand}" -->
+      <!--                             CommandParameter="{Binding #Editor}"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="增大字体" InputGesture="alt+A" -->
+      <!--                             Command="{Binding -->
+      <!--                   IncreaseFontSizeMouseCommmand }" -->
+      <!--                             CommandParameter="{Binding #Editor }"> -->
+      <!--                   </MenuItem> -->
+      <!--                   <MenuItem Header="减小字体" InputGesture="alt+S" -->
+      <!--                             Command="{Binding -->
+      <!--                   DecreaseFontSizeMouseCommmand  }" -->
+      <!--                             CommandParameter="{Binding #Editor}"> -->
+      <!--                   </MenuItem> -->
+      <!--               </MenuFlyout> -->
+      <!--           </AvaloniaEdit:TextEditor.ContextFlyout> -->
+      <!-- -->
+      <!--       </AvaloniaEdit:TextEditor> -->
+
+
+        <Grid Name="StatusBar" Background="#303030" VerticalAlignment="Bottom" Height="30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Button Name="FilePath"
+                    Padding ="4,4,8,4"
+                    Background="Transparent"
+                    IsTabStop="False"
+                    Content="{Binding StatusBarFilePath ,Mode=TwoWay }"
+                    VerticalAlignment="Center"
+                    Opacity="1.0"
+                    FontSize="11"
+                    HorizontalContentAlignment="Center"
+                    Margin="5,0">
+                <Button.Flyout>
+                    <MenuFlyout>
+
+                        <MenuItem Header="从磁盘重新加载" Command="{Binding ReloadFileMouseCommmand}"
+                                  CommandParameter="{Binding #FilePath}"  ></MenuItem>
+                        <MenuItem Header="复制文件路径" Command="{Binding CopyFilePathMouseCommmand}"
+                                  CommandParameter="{Binding #FilePath}"></MenuItem>
+                        <MenuItem Header="打开文件所在文件夹" Command="{Binding OpenFileFolderMouseCommmand}"
+                                  CommandParameter="{Binding #FilePath}"></MenuItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBlock Name="WindowsWrapSymbols" Grid.Column="1" Padding ="4,4,8,4" Text="Windows(CRLF)" VerticalAlignment="Center" FontSize="11" TextAlignment="Center" Margin="5,0"/>
+
+            <TextBlock Name="FileEncodeModeType" Grid.Column="2" Padding ="4,4,8,4" Text="UTF-8" VerticalAlignment="Center" FontSize="11" TextAlignment="Center" Margin="5,0"/>
+        </Grid>
+
+
+
+    </Panel>
+
+
+</Window>

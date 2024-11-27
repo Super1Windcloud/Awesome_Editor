@@ -1,0 +1,4 @@
+﻿SuperEdit/obj
+# A:\WinUI3_AvaloniaUI_Project\Rider_Project\SuperEdit\SuperEdit\bin\Release\net8.0\win-x64\publish\SuperEdit.exe
+SuperEdit/bin/*
+!SuperEdit/bin/Release/net8.0/win-x64/publish/
