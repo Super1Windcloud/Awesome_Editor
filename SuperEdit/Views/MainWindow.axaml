@@ -119,7 +119,7 @@
                     ToggleAutoLineMouseCommmand}"
                                   CommandParameter="{Binding #Editor}">
                         </MenuItem>
-                        <MenuItem Header="增大字体" InputGesture="alt+A"
+                        <MenuItem Header="增大字体" InputGesture="alt+D"
                                   Command="{Binding
                         IncreaseFontSizeMouseCommmand }"
                                   CommandParameter="{Binding #Editor }">
@@ -127,6 +127,16 @@
                         <MenuItem Header="减小字体" InputGesture="alt+S"
                                   Command="{Binding
                         DecreaseFontSizeMouseCommmand  }"
+                                  CommandParameter="{Binding #Editor}">
+                        </MenuItem>
+                        <MenuItem Header="复制文件路径"
+                                  Command="{Binding
+                           }"
+                                  CommandParameter="{Binding #Editor}">
+                        </MenuItem>
+                        <MenuItem Header="打开文件所在目录"
+                                  Command="{Binding
+                           }"
                                   CommandParameter="{Binding #Editor}">
                         </MenuItem>
                     </MenuFlyout>

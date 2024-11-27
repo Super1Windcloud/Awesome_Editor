@@ -1,7 +1,7 @@
 # Avalonia_Editor
 
-#### 介绍
-基于Avalonia的文本编辑器
+### 介绍
+#基于Avalonia的文本编辑器
 
  
 ## (下载release体验)[https://gitee.com/SuperWindcloud/avalonia_-editor/releases/download/1.1.1/SuperEdit.exe]
@@ -10,7 +10,8 @@
 ## 功能
 - 打开文件
 - 保存文件
-- 复制、粘贴、剪切
+- 打开文件所在目录
+- 复制、粘贴、剪切,全选,撤销,重做,查找,替换
 - 字体、字号、颜色
 - 自动换行
 - 自动补全
