@@ -30,8 +30,8 @@ scoop  bucket add hy https://gitee.com/SuperWindcloud/hyperscoop_bucket
 - 主题切换
 - 多语言支持
 ## 支持将应用添加到资源管理器上下文菜单
-> - [方式一] (https://www.cnblogs.com/clis/p/15132215.html)
-> - 方式二   
+> - [方式一](https://www.cnblogs.com/clis/p/15132215.html)
+> - 方式二  管理员运行 `./add_superedit_to_explorer_contextMenu.ps1`     
 ---
 ![img](img/11-27-24-160236.png)
 ---
