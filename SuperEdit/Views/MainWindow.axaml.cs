@@ -39,7 +39,6 @@ public partial class MainWindow : Window
     {
 
         InitializeComponent();
-        this.AttachDevTools(); // 调试工具
        var editor = this.FindControl<TextEditor>("Editor");
        SyntaxHighlightingGrammar(editor);
        HightLightCurrentLine(editor);
