@@ -1,9 +1,11 @@
+using System;
 using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using SuperEdit.ViewModels;
@@ -18,20 +20,39 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+    [Obsolete("Obsolete")]
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit.
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
-            DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(  ),
-            };
 
 
-            base.OnFrameworkInitializationCompleted();
+                var args = desktop.Args;
+
+
+                if (args != null && args.Length > 0)
+                {
+                    desktop.MainWindow = new MainWindow
+                    {
+
+                        DataContext = new MainWindowViewModel(),
+                    };
+                    string  filepath = args[0];
+                    var   viewModel = desktop.MainWindow.DataContext as MainWindowViewModel;
+                    var  mainWindow = desktop.MainWindow as MainWindow;
+                     // 获取 mainWIndowViewModel  中 Editor 控件
+                    var editor =  mainWindow?.Find<AvaloniaEdit.TextEditor>("Editor");
+                    viewModel?.OpenSpecificFileContextMenuCommand(editor:  editor, file :filepath);
+                }
+                else
+                {
+                    desktop.MainWindow = new MainWindow
+                    {
+                        DataContext = new MainWindowViewModel(),
+                    };
+                }
+
+        base.OnFrameworkInitializationCompleted();
         }
     }
 

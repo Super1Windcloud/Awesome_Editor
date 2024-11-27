@@ -168,7 +168,7 @@ public partial class MainWindow : Window
             }
             case { Key: Key.O, KeyModifiers: KeyModifiers.Control }:
             {
-                mainWindowView.OpenSpecificFileContextMenuCommand(editor);
+                mainWindowView.OpenSpecificFileContextMenuCommand(editor , file: null );
                 break;
             }
             case { Key: Key.S, KeyModifiers: KeyModifiers.Control | KeyModifiers.Shift }:

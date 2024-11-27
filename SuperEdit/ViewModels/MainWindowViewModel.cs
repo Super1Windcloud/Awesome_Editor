@@ -196,25 +196,44 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
 
     // 打开指定文件
     [Obsolete("Obsolete")]
-    public async void OpenSpecificFileContextMenuCommand(TextEditor editor)
+    public async void OpenSpecificFileContextMenuCommand(TextEditor?   editor, string? file)
     {
         // 使用Avalonia的方法打开对话框
-        var dialog = new OpenFileDialog();
-        var window = new MainWindow();
-        var path = await dialog.ShowAsync(window);
-        var filePath = path?.FirstOrDefault() ?? null;
-        Console.WriteLine(filePath);
-        if (!string.IsNullOrEmpty(filePath))
+        if (file != null && !file.Contains("新建文本.txt"))
         {
-            //  将文件内容加载到编辑器中
-            editor.Text = await File.ReadAllTextAsync(filePath);
-            //  更新文件路径
-            editor.Document.FileName = filePath;
-            Console.WriteLine(editor.Document.FileName + " loaded");
-            //  更新标题栏
-            TabItemHeader = filePath.Split('\\').Last();
-            // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
-            StatusBarFilePath = filePath; // 更新状态栏
+            if (editor != null)
+            {
+                editor.Text = await File.ReadAllTextAsync(file); // 读取文件内容
+                editor.Document.FileName = file; // 更新文件路径
+                //  更新标题栏
+                TabItemHeader = file.Split('\\').Last();
+                // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
+                StatusBarFilePath = file; // 更新状态栏
+            }
+        }
+        else
+        {
+            var dialog = new OpenFileDialog();
+            var window = new MainWindow();
+            var path = await dialog.ShowAsync(window);
+            var filePath = path?.FirstOrDefault() ?? null;
+            Console.WriteLine(filePath);
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                //  将文件内容加载到编辑器中
+                if (editor != null)
+                {
+                    editor.Text = await File.ReadAllTextAsync(filePath);
+                    //  更新文件路径
+                    editor.Document.FileName = filePath;
+                    Console.WriteLine(editor.Document.FileName + " loaded");
+                }
+
+                //  更新标题栏
+                TabItemHeader = filePath.Split('\\').Last();
+                // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
+                StatusBarFilePath = filePath; // 更新状态栏
+            }
         }
     }
 
@@ -261,7 +280,7 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
 
     // 另存为
     [Obsolete("Obsolete")]
-    public async void SaveCurrentTemplateFileToDisk (TextEditor editor )
+    public async void SaveCurrentTemplateFileToDisk(TextEditor editor)
     {
         var filePath = StatusBarFilePath;
         Console.WriteLine(filePath);
@@ -281,12 +300,10 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
             if (!string.IsNullOrEmpty(path))
             {
                 // 根据用户选择的路径保存文件内容
-                await SaveFileContentAsync(path , editor.Text ?? string.Empty );
+                await SaveFileContentAsync(path, editor.Text ?? string.Empty);
                 Console.WriteLine($"文件已保存至: {path}");
             }
         }
-
-
     }
 
     private async Task SaveFileContentAsync(string filePath, string content)
@@ -297,7 +314,6 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
             await streamWriter.WriteAsync(content);
         }
     }
-
 
 
     public void testOpenFile()
