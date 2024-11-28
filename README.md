@@ -6,7 +6,7 @@
  
 ## 快速开始 
 
-- [下载release体验](https://gitee.com/SuperWindcloud/avalonia_-editor/releases/download/1.1.1/SuperEdit.exe)
+- [下载release体验](https://github.com/Super1Windcloud/Awesome_Editor/releases/download/7.7.7/SuperEdit.exe)
 -  通过scoop 安装
 ```powershell
 scoop  bucket add hy https://gitee.com/SuperWindcloud/hyperscoop_bucket 
@@ -29,7 +29,9 @@ scoop  bucket add hy https://gitee.com/SuperWindcloud/hyperscoop_bucket
 - 自动保存
 - 主题切换
 - 多语言支持
- 
+## 支持将应用添加到资源管理器上下文菜单
+> - [方式一](https://www.cnblogs.com/clis/p/15132215.html)
+> - 方式二  修改文件配置,然后管理员运行 `./add_superedit_to_explorer_contextMenu.ps1`     
 ---
 ![img](img/11-27-24-160236.png)
 ---
@@ -38,6 +40,8 @@ scoop  bucket add hy https://gitee.com/SuperWindcloud/hyperscoop_bucket
 ![img](img/powershell.jpg)
 ---
 ![img](img/awh.jpg)
+---
+![图片](https://github.com/user-attachments/assets/ffd85029-8336-4ccd-aeed-abbea09a2f48)
 
 ---
-![img](img/11-27-24-190235.png)
+ ![图片](https://github.com/user-attachments/assets/693e2308-3e4a-47ae-b80f-83dad24366a5)
