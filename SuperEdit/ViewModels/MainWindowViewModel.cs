@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AvaloniaEdit;
 using Avalonia.Controls;
 using Avalonia.Platform;
+using Avalonia.VisualTree;
 
 namespace SuperEdit.ViewModels;
 
@@ -17,10 +18,17 @@ using SuperEdit.Views;
 using TextMateSharp.Grammars;
 using Avalonia;
 using SuperEdit.Views;
+using Avalonia.Controls;
+using Avalonia.Threading;
+using SuperEdit.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
 {
     private string? _tabItemHeader = "新建文本.txt";
+
+    public MainWindowViewModel()
+    {
+    }
 
 
     public void IncreaseFontSizeMouseCommmand(TextEditor editor)
@@ -80,8 +88,23 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
         ApplicationCommands.Replace.Execute(null, textArea);
     }
 
-    public void ReloadFileMouseCommmand(Button reloadButton)
+    public void ReloadFileMouseCommmand(Panel? panel)
     {
+        var editor = panel?.GetVisualDescendants().OfType<TextEditor>().FirstOrDefault(e => e.Name == "Editor");
+        var reloadButton = panel?.GetVisualDescendants().OfType<Button>().FirstOrDefault(e => e.Name == "FileName");
+
+        if (editor == null)
+        {
+            Console.WriteLine("editor is null");
+            return;
+        }
+
+        if (reloadButton == null)
+        {
+            Console.WriteLine("reloadButton is not null");
+            return;
+        }
+
         // Reload the file from disk
         try
         {
@@ -89,6 +112,7 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
             if (filePath != null && !filePath.Contains("新建文本.txt"))
             {
                 var fileContent = File.ReadAllText(filePath);
+                editor.Text = fileContent;
                 Console.WriteLine("文件重新加载成功");
                 Console.WriteLine("文件路径：" + filePath);
             }
@@ -186,6 +210,10 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
             Console.WriteLine(editor.Text);
             await File.WriteAllTextAsync(filePath, editor.Text); // 保存文件内容 到指定路径
             Console.WriteLine(filePath + " saved");
+            // 更新标题栏
+            TabItemHeader = filePath.Split('\\').Last();
+            StatusBarFilePath = filePath; // 更新状态栏
+            editor.Document.FileName = filePath; // 更新文件路径
         }
         else
         {
@@ -196,8 +224,9 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
 
     // 打开指定文件
     [Obsolete("Obsolete")]
-    public async void OpenSpecificFileContextMenuCommand(TextEditor?   editor, string? file)
+    public async void OpenSpecificFileContextMenuCommand(TextEditor? editor, string? file)
     {
+        //   if (file== null  )  file = editor?.Document.FileName;
         // 使用Avalonia的方法打开对话框
         if (file != null && !file.Contains("新建文本.txt"))
         {
@@ -227,18 +256,23 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
                     //  更新文件路径
                     editor.Document.FileName = filePath;
                     Console.WriteLine(editor.Document.FileName + " loaded");
+                    TabItemHeader = filePath.Split('\\').Last();
+                    // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
+                    StatusBarFilePath = filePath; // 更新状态栏
+                    Console.WriteLine("状态栏：" + StatusBarFilePath);
+                    Console.WriteLine("标签栏：" + TabItemHeader);
                 }
 
-                //  更新标题栏
-                TabItemHeader = filePath.Split('\\').Last();
-                // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
-                StatusBarFilePath = filePath; // 更新状态栏
+                // //  更新标题栏
+                // TabItemHeader = filePath.Split('\\').Last();
+                // // 更新视图是通过设置属性而不是的属性保存的状态, 状态由属性内部更改
+                // StatusBarFilePath = filePath; // 更新状态栏
             }
         }
     }
 
     private string? _statusBarText = "新建文本.txt";
-    private IWindowImpl _windowImplImplementation;
+    // private IWindowImpl _windowImplImplementation;
 
     // private App _window;
 //    public MainWindowViewModel(App app)
@@ -278,13 +312,21 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
         }
     }
 
+
+
+    [Obsolete("Obsolete")]
+    public void OpenSpecificFileContextMenuCommandByClick(TextEditor editor)
+    {
+        OpenSpecificFileContextMenuCommand(editor, null);
+    }
+
     // 另存为
     [Obsolete("Obsolete")]
     public async void SaveCurrentTemplateFileToDisk(TextEditor editor)
     {
         var filePath = StatusBarFilePath;
         Console.WriteLine(filePath);
-        if (filePath != null && filePath.Contains("新建文本.txt"))
+        if (filePath != null)
         {
             var dialog = new SaveFileDialog()
             {
@@ -303,6 +345,10 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
                 await SaveFileContentAsync(path, editor.Text ?? string.Empty);
                 Console.WriteLine($"文件已保存至: {path}");
             }
+
+            StatusBarFilePath = path; // 更新状态栏
+            TabItemHeader = path?.Split('\\').Last(); // 更新标题栏
+            editor.Document.FileName = path; // 更新文件路径
         }
     }
 
@@ -328,5 +374,8 @@ public partial class MainWindowViewModel : ViewModelBase, INotifyPropertyChanged
 
     public void CloseTabOrWindowCommand()
     {
+        // Avalonia 强制结束进程或者关闭窗口？
+
+        Environment.Exit(0);
     }
 }

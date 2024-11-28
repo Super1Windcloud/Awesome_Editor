@@ -2,11 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="SuperEdit.App"
              xmlns:local="using:SuperEdit"
+             xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
 
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.DataTemplates>
+             <Application.Resources>
+                 <converters:MenuScrollingVisibilityConverter x:Key="MultiToCommandParameterConverter" />
+             </Application.Resources>
+             <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
   

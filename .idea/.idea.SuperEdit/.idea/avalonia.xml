@@ -5,7 +5,6 @@
       <map>
         <entry key="SuperEdit/App.axaml" value="SuperEdit/SuperEdit.csproj" />
         <entry key="SuperEdit/Views/MainWindow.axaml" value="SuperEdit/SuperEdit.csproj" />
-        <entry key="SuperEdit/Views/RenameFileView.axaml" value="SuperEdit/SuperEdit.csproj" />
       </map>
     </option>
   </component>

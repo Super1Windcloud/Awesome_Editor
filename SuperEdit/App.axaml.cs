@@ -25,34 +25,30 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            var args = desktop.Args;
 
 
-                var args = desktop.Args;
-
-
-                if (args != null && args.Length > 0)
+            if (args != null && args.Length > 0)
+            {
+                desktop.MainWindow = new MainWindow
                 {
-                    desktop.MainWindow = new MainWindow
-                    {
-
-                        DataContext = new MainWindowViewModel(),
-                    };
-                    string  filepath = args[0];
-                    var   viewModel = desktop.MainWindow.DataContext as MainWindowViewModel;
-                    var  mainWindow = desktop.MainWindow as MainWindow;
-                     // 获取 mainWIndowViewModel  中 Editor 控件
-                    var editor =  mainWindow?.Find<AvaloniaEdit.TextEditor>("Editor");
-                    viewModel?.OpenSpecificFileContextMenuCommand(editor:  editor, file :filepath);
-                }
-                else
+                    DataContext = new MainWindowViewModel(),
+                };
+                string filepath = args[0];
+                var viewModel = desktop.MainWindow.DataContext as MainWindowViewModel;
+                var mainWindow = desktop.MainWindow as MainWindow;
+                // 获取 mainWIndowViewModel  中 Editor 控件
+                var editor = mainWindow?.Find<AvaloniaEdit.TextEditor>("Editor");
+                viewModel?.OpenSpecificFileContextMenuCommand(editor: editor, file: filepath);
+            }
+            else
+            {
+                desktop.MainWindow = new MainWindow
                 {
-                    desktop.MainWindow = new MainWindow
-                    {
-                        DataContext = new MainWindowViewModel(),
-                    };
-                }
-
-        base.OnFrameworkInitializationCompleted();
+                    DataContext = new MainWindowViewModel(),
+                };
+            }
+            base.OnFrameworkInitializationCompleted();
         }
     }
 
@@ -68,6 +64,4 @@ public partial class App : Application
             BindingPlugins.DataValidators.Remove(plugin);
         }
     }
-
-
 }

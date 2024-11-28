@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -42,9 +43,11 @@ public partial class MainWindow : Window
         InitializeComponent();
         var editor = this.FindControl<TextEditor>("Editor");
         SyntaxHighlightingGrammar(editor);
+        mainWindowView = new MainWindowViewModel();
         HightLightCurrentLine(editor);
     }
 
+    public MainWindowViewModel? mainWindowView;
     private void SyntaxHighlightingGrammar(TextEditor? editor)
     {
         var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
@@ -149,7 +152,7 @@ public partial class MainWindow : Window
     {
         var editor = sender as TextEditor;
         if (editor == null) return;
-        var mainWindowView = new MainWindowViewModel();
+
         switch (e)
         {
             case { Key: Key.Z, KeyModifiers: KeyModifiers.Alt }:
@@ -163,19 +166,52 @@ public partial class MainWindow : Window
                 break;
             case { Key: Key.S, KeyModifiers: KeyModifiers.Control }:
             {
-                mainWindowView.SaveCurrentFile(editor);
+                mainWindowView?.SaveCurrentFile(editor);
                 break;
             }
             case { Key: Key.O, KeyModifiers: KeyModifiers.Control }:
             {
-                mainWindowView.OpenSpecificFileContextMenuCommand(editor , file: null );
+                mainWindowView?.OpenSpecificFileContextMenuCommand(editor , file: null );
                 break;
             }
             case { Key: Key.S, KeyModifiers: KeyModifiers.Control | KeyModifiers.Shift }:
             {
-                mainWindowView.SaveCurrentTemplateFileToDisk(editor );
+                mainWindowView?.SaveCurrentTemplateFileToDisk(editor );
+                break;
+            }
+            case { Key : Key.W, KeyModifiers: KeyModifiers.Control }:
+            {
+                mainWindowView?.CloseTabOrWindowCommand();
                 break;
             }
         }
     }
+
+    private void MonitoringFileContentsChanged(object? sender, EventArgs e)
+    {
+        var editor = sender as TextEditor;
+        if (editor == null) return;
+        IsContentModifiedText = editor.IsModified ? "内容已修改" : "";
+    }
+    private string? _changedText = "";
+
+    public string? IsContentModifiedText
+    {
+        get => _changedText;
+        set
+        {
+            if (_changedText != value)
+            {
+                _changedText = value;
+                OnPropertyChanged(nameof(IsContentModifiedText)); // 通知更新
+            }
+        }
+    }
+    private void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
 }
